@@ -143,7 +143,54 @@ enum TipoEvento {
 }
 
 // ---------------------------------------------------------------------
-// 3 · GUARDIAS  ·  quien atiende, y cuando
+// 3 · DEPENDENCIAS ENTRE SERVICIOS  ·  extensión 8
+// ---------------------------------------------------------------------
+
+/**
+ * Declara que un servicio consumidor necesita a otro servicio proveedor.
+ * La dirección es importante: si falla el proveedor, el impacto puede
+ * propagarse hacia el consumidor; el sentido inverso no se asume.
+ */
+entity DependenciaDeServicio {
+  tipo TipoDependencia required
+  activa Boolean required
+  descripcion String maxlength(500)
+}
+
+/**
+ * Registra que un incidente alcanzó un servicio a través del grafo.
+ * No se infiere que el servicio sea la causa: solo que fue afectado.
+ */
+entity ImpactoPropagado {
+  detectadoEn Instant required
+  estado EstadoImpacto required
+  detalle String maxlength(1000)
+}
+
+/**
+ * Perfil adicional para servicios cuya indisponibilidad requiere atención
+ * prioritaria. Se separa de Criticidad porque esta última clasifica el
+ * servicio y este perfil define cómo se trata al propagar y escalar.
+ */
+entity ServicioCritico {
+  prioridadEscalamiento Integer required min(1) max(10)
+  requiereEscalamientoInmediato Boolean required
+  justificacion String maxlength(500)
+}
+
+/** Distingue una dependencia imprescindible de una degradación tolerable. */
+enum TipoDependencia {
+  OBLIGATORIA, OPCIONAL
+}
+
+/** Estado de la propagación para conservar una traza idempotente. */
+enum EstadoImpacto {
+  DETECTADO, NOTIFICADO, MITIGADO, DESCARTADO
+}
+
+
+// ---------------------------------------------------------------------
+// 4 · GUARDIAS  ·  quien atiende, y cuando
 // ---------------------------------------------------------------------
 
 /**
@@ -195,7 +242,7 @@ enum Canal {
 }
 
 // ---------------------------------------------------------------------
-// 4 · RESPUESTA Y APRENDIZAJE
+// 5 · RESPUESTA Y APRENDIZAJE
 // ---------------------------------------------------------------------
 
 /**
@@ -258,6 +305,15 @@ relationship ManyToOne {
   Alerta{incidente(titulo)} to Incidente{alerta}
   EventoDeIncidente{incidente(titulo) required} to Incidente{evento}
 
+  // El servicio dependiente consume al servicio proveedor: la dirección modela el grafo.
+  DependenciaDeServicio{servicioDependiente(nombre) required} to Servicio{dependenciaComoConsumidor}
+  DependenciaDeServicio{servicioProveedor(nombre) required} to Servicio{dependenciaComoProveedor}
+  // Un impacto siempre se atribuye a un incidente y a un servicio afectado.
+  ImpactoPropagado{incidente(titulo) required} to Incidente{impactoPropagado}
+  ImpactoPropagado{servicioAfectado(nombre) required} to Servicio{impactoPropagado}
+  // Conserva el arco del grafo que produjo el impacto; el origen puede no existir para el servicio raíz.
+  ImpactoPropagado{dependencia(descripcion)} to DependenciaDeServicio{impactoPropagado}
+
   Rotacion{equipo(nombre) required} to Equipo{rotacion}
   TurnoDeGuardia{rotacion(nombre) required} to Rotacion{turno}
   PoliticaEscalamiento{servicio(nombre) required} to Servicio{politica}
@@ -280,6 +336,8 @@ relationship ManyToMany {
  */
 relationship OneToOne {
   Postmortem{incidente(titulo) required} to Incidente{postmortem}
+  // Un servicio puede tener un único perfil crítico; no todos los servicios lo necesitan.
+  ServicioCritico{servicio(nombre) required} to Servicio{perfilCritico}
 }
 
 /**
@@ -291,6 +349,7 @@ relationship ManyToOne {
   PasoEscalamiento{destinatarioDirecto(login)} to User with builtInEntity
   Notificacion{destinatario(login) required} to User with builtInEntity
   AccionCorrectiva{responsable(login)} to User with builtInEntity
+
 }
 
 // ---------------------------------------------------------------------

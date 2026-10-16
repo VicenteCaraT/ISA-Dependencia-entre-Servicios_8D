@@ -1,0 +1,58 @@
+{
+  "annotations": {
+    "changelogDate": "20261016120756"
+  },
+  "applications": ["oncall"],
+  "documentation": "Declara que un servicio consumidor necesita a otro servicio proveedor.\\nLa dirección es importante: si falla el proveedor, el impacto puede\\npropagarse hacia el consumidor; el sentido inverso no se asume.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "tipo",
+      "fieldType": "TipoDependencia",
+      "fieldTypeDocumentation": "Distingue una dependencia imprescindible de una degradación tolerable.",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "OBLIGATORIA,OPCIONAL"
+    },
+    {
+      "fieldName": "activa",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    }
+  ],
+  "name": "DependenciaDeServicio",
+  "relationships": [
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "servicio",
+      "otherEntityRelationshipName": "dependenciaComoConsumidor",
+      "relationshipName": "servicioDependiente",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "servicio",
+      "otherEntityRelationshipName": "dependenciaComoProveedor",
+      "relationshipName": "servicioProveedor",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "impactoPropagado",
+      "otherEntityRelationshipName": "dependencia",
+      "relationshipName": "impactoPropagado",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

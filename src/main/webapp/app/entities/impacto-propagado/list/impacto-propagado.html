@@ -1,0 +1,157 @@
+<div>
+  <h2 id="page-heading" data-cy="ImpactoPropagadoHeading">
+    <span jhiTranslate="oncallApp.impactoPropagado.home.title">Impacto Propagados</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.impactoPropagado.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-impacto-propagado"
+        [routerLink]="['/impacto-propagado/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.impactoPropagado.home.createLabel">Crear nuevo Impacto Propagado</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (impactoPropagados().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.impactoPropagado.home.notFound">Ningún Impacto Propagados encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="detectadoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.impactoPropagado.detectadoEn">Detectado En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="estado">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.impactoPropagado.estado">Estado</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="detalle">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.impactoPropagado.detalle">Detalle</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="incidente.titulo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.impactoPropagado.incidente">Incidente</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="servicioAfectado.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.impactoPropagado.servicioAfectado">Servicio Afectado</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="dependencia.descripcion">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.impactoPropagado.dependencia">Dependencia</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (impactoPropagado of impactoPropagados(); track trackId(impactoPropagado)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/impacto-propagado', impactoPropagado.id, 'view']">{{ impactoPropagado.id }}</a>
+              </td>
+              <td>{{ impactoPropagado.detectadoEn | formatMediumDatetime }}</td>
+              <td [jhiTranslate]="'oncallApp.EstadoImpacto.' + (impactoPropagado.estado ?? 'null')">
+                {{
+                  { null: '', DETECTADO: 'DETECTADO', NOTIFICADO: 'NOTIFICADO', MITIGADO: 'MITIGADO', DESCARTADO: 'DESCARTADO' }[
+                    impactoPropagado.estado ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>{{ impactoPropagado.detalle }}</td>
+              <td>
+                @if (impactoPropagado.incidente) {
+                  <div>
+                    <a [routerLink]="['/incidente', impactoPropagado.incidente.id, 'view']">{{ impactoPropagado.incidente.titulo }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (impactoPropagado.servicioAfectado) {
+                  <div>
+                    <a [routerLink]="['/servicio', impactoPropagado.servicioAfectado.id, 'view']">{{
+                      impactoPropagado.servicioAfectado.nombre
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (impactoPropagado.dependencia) {
+                  <div>
+                    <a [routerLink]="['/dependencia-de-servicio', impactoPropagado.dependencia.id, 'view']">{{
+                      impactoPropagado.dependencia.descripcion
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/impacto-propagado', impactoPropagado.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/impacto-propagado', impactoPropagado.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(impactoPropagado)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

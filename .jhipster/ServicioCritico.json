@@ -1,0 +1,42 @@
+{
+  "annotations": {
+    "changelogDate": "20261016120758"
+  },
+  "applications": ["oncall"],
+  "documentation": "Perfil adicional para servicios cuya indisponibilidad requiere atención\\nprioritaria. Se separa de Criticidad porque esta última clasifica el\\nservicio y este perfil define cómo se trata al propagar y escalar.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "prioridadEscalamiento",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min", "max"],
+      "fieldValidateRulesMax": "10",
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "requiereEscalamientoInmediato",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "justificacion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    }
+  ],
+  "name": "ServicioCritico",
+  "relationships": [
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "servicio",
+      "otherEntityRelationshipName": "perfilCritico",
+      "relationshipName": "servicio",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

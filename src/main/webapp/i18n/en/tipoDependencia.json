@@ -1,0 +1,9 @@
+{
+  "oncallApp": {
+    "TipoDependencia": {
+      "null": "",
+      "OBLIGATORIA": "OBLIGATORIA",
+      "OPCIONAL": "OPCIONAL"
+    }
+  }
+}

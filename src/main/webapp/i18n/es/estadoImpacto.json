@@ -1,0 +1,11 @@
+{
+  "oncallApp": {
+    "EstadoImpacto": {
+      "null": "",
+      "DETECTADO": "DETECTADO",
+      "NOTIFICADO": "NOTIFICADO",
+      "MITIGADO": "MITIGADO",
+      "DESCARTADO": "DESCARTADO"
+    }
+  }
+}

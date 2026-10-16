@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (dependenciaDeServicio(); as dependenciaDeServicioRef) {
+      <div>
+        <h2 data-cy="dependenciaDeServicioDetailsHeading">
+          <span jhiTranslate="oncallApp.dependenciaDeServicio.detail.title">Dependencia De Servicio</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ dependenciaDeServicioRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.dependenciaDeServicio.tipo">Tipo</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.TipoDependencia.' + (dependenciaDeServicioRef.tipo ?? 'null')">{{
+              { null: '', OBLIGATORIA: 'OBLIGATORIA', OPCIONAL: 'OPCIONAL' }[dependenciaDeServicioRef.tipo ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.dependenciaDeServicio.activa">Activa</span></dt>
+          <dd>
+            <span>{{ dependenciaDeServicioRef.activa }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.dependenciaDeServicio.descripcion">Descripcion</span></dt>
+          <dd>
+            <span>{{ dependenciaDeServicioRef.descripcion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.dependenciaDeServicio.servicioDependiente">Servicio Dependiente</span></dt>
+          <dd>
+            @if (dependenciaDeServicio()!.servicioDependiente) {
+              <div>
+                <a [routerLink]="['/servicio', dependenciaDeServicio()!.servicioDependiente?.id, 'view']">{{
+                  dependenciaDeServicioRef.servicioDependiente?.nombre
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.dependenciaDeServicio.servicioProveedor">Servicio Proveedor</span></dt>
+          <dd>
+            @if (dependenciaDeServicio()!.servicioProveedor) {
+              <div>
+                <a [routerLink]="['/servicio', dependenciaDeServicio()!.servicioProveedor?.id, 'view']">{{
+                  dependenciaDeServicioRef.servicioProveedor?.nombre
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/dependencia-de-servicio', dependenciaDeServicioRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

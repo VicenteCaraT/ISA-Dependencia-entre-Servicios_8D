@@ -1,0 +1,29 @@
+{
+  "oncallApp": {
+    "impactoPropagado": {
+      "home": {
+        "title": "Impacto Propagados",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Impacto Propagado",
+        "createOrEditLabel": "Crear o editar Impacto Propagado",
+        "notFound": "Ningún Impacto Propagados encontrado"
+      },
+      "created": "Un nuevo Impacto Propagado ha sido creado con el identificador {{ param }}",
+      "updated": "Un Impacto Propagado ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Impacto Propagado ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Impacto Propagado {{ id }}?"
+      },
+      "detail": {
+        "title": "Impacto Propagado"
+      },
+      "id": "ID",
+      "detectadoEn": "Detectado En",
+      "estado": "Estado",
+      "detalle": "Detalle",
+      "incidente": "Incidente",
+      "servicioAfectado": "Servicio Afectado",
+      "dependencia": "Dependencia"
+    }
+  }
+}

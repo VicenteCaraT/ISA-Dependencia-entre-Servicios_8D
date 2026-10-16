@@ -1,0 +1,153 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-servicio-critico-heading"
+        data-cy="ServicioCriticoCreateUpdateHeading"
+        jhiTranslate="oncallApp.servicioCritico.home.createOrEditLabel"
+      >
+        Crear o editar Servicio Critico
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let prioridadEscalamientoRef = editForm.get('prioridadEscalamiento')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_prioridadEscalamiento" jhiTranslate="oncallApp.servicioCritico.prioridadEscalamiento"
+            >Prioridad Escalamiento</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="prioridadEscalamiento"
+            id="field_prioridadEscalamiento"
+            data-cy="prioridadEscalamiento"
+            formControlName="prioridadEscalamiento"
+          />
+          @if (prioridadEscalamientoRef.invalid && (prioridadEscalamientoRef.dirty || prioridadEscalamientoRef.touched)) {
+            <div>
+              @if (prioridadEscalamientoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (prioridadEscalamientoRef.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '1' }"
+                  >Este campo debe ser mayor que 1.</small
+                >
+              }
+              @if (prioridadEscalamientoRef.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '10' }"
+                  >Este campo no puede ser mayor que 10.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!prioridadEscalamientoRef.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Este campo debe ser un número.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let requiereEscalamientoInmediatoRef = editForm.get('requiereEscalamientoInmediato')!;
+        <div class="mb-3">
+          <label
+            class="form-label"
+            for="field_requiereEscalamientoInmediato"
+            jhiTranslate="oncallApp.servicioCritico.requiereEscalamientoInmediato"
+            >Requiere Escalamiento Inmediato</label
+          >
+          <input
+            type="checkbox"
+            class="form-check"
+            name="requiereEscalamientoInmediato"
+            id="field_requiereEscalamientoInmediato"
+            data-cy="requiereEscalamientoInmediato"
+            formControlName="requiereEscalamientoInmediato"
+          />
+          @if (
+            requiereEscalamientoInmediatoRef.invalid && (requiereEscalamientoInmediatoRef.dirty || requiereEscalamientoInmediatoRef.touched)
+          ) {
+            <div>
+              @if (requiereEscalamientoInmediatoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let justificacionRef = editForm.get('justificacion')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_justificacion" jhiTranslate="oncallApp.servicioCritico.justificacion">Justificacion</label>
+          <input
+            type="text"
+            class="form-control"
+            name="justificacion"
+            id="field_justificacion"
+            data-cy="justificacion"
+            formControlName="justificacion"
+          />
+          @if (justificacionRef.invalid && (justificacionRef.dirty || justificacionRef.touched)) {
+            <div>
+              @if (justificacionRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '500' }"
+                  >Este campo no puede superar más de 500 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_servicio" jhiTranslate="oncallApp.servicioCritico.servicio">Servicio</label>
+          <select
+            class="form-control"
+            id="field_servicio"
+            data-cy="servicio"
+            name="servicio"
+            formControlName="servicio"
+            [compareWith]="compareServicio"
+          >
+            @if (editForm.get(['servicio'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (servicioOption of serviciosCollection(); track $index) {
+              <option [ngValue]="servicioOption">{{ servicioOption.nombre }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['servicio'])!.invalid && (editForm.get(['servicio'])!.dirty || editForm.get(['servicio'])!.touched)) {
+          <div>
+            @if (editForm.get(['servicio'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

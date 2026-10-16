@@ -1,0 +1,9 @@
+export enum EstadoImpacto {
+  DETECTADO = 'DETECTADO',
+
+  NOTIFICADO = 'NOTIFICADO',
+
+  MITIGADO = 'MITIGADO',
+
+  DESCARTADO = 'DESCARTADO',
+}

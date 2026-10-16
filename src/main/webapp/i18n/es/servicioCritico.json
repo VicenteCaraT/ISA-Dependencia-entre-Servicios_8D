@@ -1,0 +1,27 @@
+{
+  "oncallApp": {
+    "servicioCritico": {
+      "home": {
+        "title": "Servicio Criticos",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Servicio Critico",
+        "createOrEditLabel": "Crear o editar Servicio Critico",
+        "notFound": "Ningún Servicio Criticos encontrado"
+      },
+      "created": "Un nuevo Servicio Critico ha sido creado con el identificador {{ param }}",
+      "updated": "Un Servicio Critico ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Servicio Critico ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Servicio Critico {{ id }}?"
+      },
+      "detail": {
+        "title": "Servicio Critico"
+      },
+      "id": "ID",
+      "prioridadEscalamiento": "Prioridad Escalamiento",
+      "requiereEscalamientoInmediato": "Requiere Escalamiento Inmediato",
+      "justificacion": "Justificacion",
+      "servicio": "Servicio"
+    }
+  }
+}

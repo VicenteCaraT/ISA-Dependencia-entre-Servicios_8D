@@ -1,0 +1,76 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (impactoPropagado(); as impactoPropagadoRef) {
+      <div>
+        <h2 data-cy="impactoPropagadoDetailsHeading">
+          <span jhiTranslate="oncallApp.impactoPropagado.detail.title">Impacto Propagado</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ impactoPropagadoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.impactoPropagado.detectadoEn">Detectado En</span></dt>
+          <dd>
+            <span>{{ impactoPropagadoRef.detectadoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.impactoPropagado.estado">Estado</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.EstadoImpacto.' + (impactoPropagadoRef.estado ?? 'null')">{{
+              { null: '', DETECTADO: 'DETECTADO', NOTIFICADO: 'NOTIFICADO', MITIGADO: 'MITIGADO', DESCARTADO: 'DESCARTADO' }[
+                impactoPropagadoRef.estado ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.impactoPropagado.detalle">Detalle</span></dt>
+          <dd>
+            <span>{{ impactoPropagadoRef.detalle }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.impactoPropagado.incidente">Incidente</span></dt>
+          <dd>
+            @if (impactoPropagado()!.incidente) {
+              <div>
+                <a [routerLink]="['/incidente', impactoPropagado()!.incidente?.id, 'view']">{{ impactoPropagadoRef.incidente?.titulo }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.impactoPropagado.servicioAfectado">Servicio Afectado</span></dt>
+          <dd>
+            @if (impactoPropagado()!.servicioAfectado) {
+              <div>
+                <a [routerLink]="['/servicio', impactoPropagado()!.servicioAfectado?.id, 'view']">{{
+                  impactoPropagadoRef.servicioAfectado?.nombre
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.impactoPropagado.dependencia">Dependencia</span></dt>
+          <dd>
+            @if (impactoPropagado()!.dependencia) {
+              <div>
+                <a [routerLink]="['/dependencia-de-servicio', impactoPropagado()!.dependencia?.id, 'view']">{{
+                  impactoPropagadoRef.dependencia?.descripcion
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/impacto-propagado', impactoPropagadoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

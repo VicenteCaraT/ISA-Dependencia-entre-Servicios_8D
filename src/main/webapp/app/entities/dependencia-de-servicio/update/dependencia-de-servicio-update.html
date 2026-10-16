@@ -1,0 +1,155 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-dependencia-de-servicio-heading"
+        data-cy="DependenciaDeServicioCreateUpdateHeading"
+        jhiTranslate="oncallApp.dependenciaDeServicio.home.createOrEditLabel"
+      >
+        Crear o editar Dependencia De Servicio
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let tipoRef = editForm.get('tipo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_tipo" jhiTranslate="oncallApp.dependenciaDeServicio.tipo">Tipo</label>
+          <select class="form-control" name="tipo" formControlName="tipo" id="field_tipo" data-cy="tipo">
+            <option [ngValue]="null">{{ 'oncallApp.TipoDependencia.null' | translate }}</option>
+            @for (tipoDependencia of tipoDependenciaValues; track $index) {
+              <option [value]="tipoDependencia">{{ 'oncallApp.TipoDependencia.' + tipoDependencia | translate }}</option>
+            }
+          </select>
+          @if (tipoRef.invalid && (tipoRef.dirty || tipoRef.touched)) {
+            <div>
+              @if (tipoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let activaRef = editForm.get('activa')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_activa" jhiTranslate="oncallApp.dependenciaDeServicio.activa">Activa</label>
+          <input type="checkbox" class="form-check" name="activa" id="field_activa" data-cy="activa" formControlName="activa" />
+          @if (activaRef.invalid && (activaRef.dirty || activaRef.touched)) {
+            <div>
+              @if (activaRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let descripcionRef = editForm.get('descripcion')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_descripcion" jhiTranslate="oncallApp.dependenciaDeServicio.descripcion">Descripcion</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descripcion"
+            id="field_descripcion"
+            data-cy="descripcion"
+            formControlName="descripcion"
+          />
+          @if (descripcionRef.invalid && (descripcionRef.dirty || descripcionRef.touched)) {
+            <div>
+              @if (descripcionRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '500' }"
+                  >Este campo no puede superar más de 500 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_servicioDependiente" jhiTranslate="oncallApp.dependenciaDeServicio.servicioDependiente"
+            >Servicio Dependiente</label
+          >
+          <select
+            class="form-control"
+            id="field_servicioDependiente"
+            data-cy="servicioDependiente"
+            name="servicioDependiente"
+            formControlName="servicioDependiente"
+            [compareWith]="compareServicio"
+          >
+            @if (editForm.get(['servicioDependiente'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (servicioOption of serviciosSharedCollection(); track $index) {
+              <option [ngValue]="servicioOption">{{ servicioOption.nombre }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['servicioDependiente'])!.invalid &&
+          (editForm.get(['servicioDependiente'])!.dirty || editForm.get(['servicioDependiente'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['servicioDependiente'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_servicioProveedor" jhiTranslate="oncallApp.dependenciaDeServicio.servicioProveedor"
+            >Servicio Proveedor</label
+          >
+          <select
+            class="form-control"
+            id="field_servicioProveedor"
+            data-cy="servicioProveedor"
+            name="servicioProveedor"
+            formControlName="servicioProveedor"
+            [compareWith]="compareServicio"
+          >
+            @if (editForm.get(['servicioProveedor'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (servicioOption of serviciosSharedCollection(); track $index) {
+              <option [ngValue]="servicioOption">{{ servicioOption.nombre }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['servicioProveedor'])!.invalid &&
+          (editForm.get(['servicioProveedor'])!.dirty || editForm.get(['servicioProveedor'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['servicioProveedor'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div>
+  <h2 id="page-heading" data-cy="DependenciaDeServicioHeading">
+    <span jhiTranslate="oncallApp.dependenciaDeServicio.home.title">Dependencia De Servicios</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.dependenciaDeServicio.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-dependencia-de-servicio"
+        [routerLink]="['/dependencia-de-servicio/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.dependenciaDeServicio.home.createLabel">Crear nuevo Dependencia De Servicio</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (dependenciaDeServicios().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.dependenciaDeServicio.home.notFound">Ningún Dependencia De Servicios encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="tipo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.dependenciaDeServicio.tipo">Tipo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="activa">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.dependenciaDeServicio.activa">Activa</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descripcion">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.dependenciaDeServicio.descripcion">Descripcion</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="servicioDependiente.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.dependenciaDeServicio.servicioDependiente">Servicio Dependiente</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="servicioProveedor.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.dependenciaDeServicio.servicioProveedor">Servicio Proveedor</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (dependenciaDeServicio of dependenciaDeServicios(); track trackId(dependenciaDeServicio)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/dependencia-de-servicio', dependenciaDeServicio.id, 'view']">{{ dependenciaDeServicio.id }}</a>
+              </td>
+              <td [jhiTranslate]="'oncallApp.TipoDependencia.' + (dependenciaDeServicio.tipo ?? 'null')">
+                {{ { null: '', OBLIGATORIA: 'OBLIGATORIA', OPCIONAL: 'OPCIONAL' }[dependenciaDeServicio.tipo ?? 'null'] }}
+              </td>
+              <td>{{ dependenciaDeServicio.activa }}</td>
+              <td>{{ dependenciaDeServicio.descripcion }}</td>
+              <td>
+                @if (dependenciaDeServicio.servicioDependiente) {
+                  <div>
+                    <a [routerLink]="['/servicio', dependenciaDeServicio.servicioDependiente.id, 'view']">{{
+                      dependenciaDeServicio.servicioDependiente.nombre
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (dependenciaDeServicio.servicioProveedor) {
+                  <div>
+                    <a [routerLink]="['/servicio', dependenciaDeServicio.servicioProveedor.id, 'view']">{{
+                      dependenciaDeServicio.servicioProveedor.nombre
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/dependencia-de-servicio', dependenciaDeServicio.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/dependencia-de-servicio', dependenciaDeServicio.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(dependenciaDeServicio)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

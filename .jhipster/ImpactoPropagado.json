@@ -1,0 +1,59 @@
+{
+  "annotations": {
+    "changelogDate": "20261016120757"
+  },
+  "applications": ["oncall"],
+  "documentation": "Registra que un incidente alcanzó un servicio a través del grafo.\\nNo se infiere que el servicio sea la causa: solo que fue afectado.",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "detectadoEn",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoImpacto",
+      "fieldTypeDocumentation": "Estado de la propagación para conservar una traza idempotente.",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "DETECTADO,NOTIFICADO,MITIGADO,DESCARTADO"
+    },
+    {
+      "fieldName": "detalle",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1000"
+    }
+  ],
+  "name": "ImpactoPropagado",
+  "relationships": [
+    {
+      "otherEntityField": "titulo",
+      "otherEntityName": "incidente",
+      "otherEntityRelationshipName": "impactoPropagado",
+      "relationshipName": "incidente",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "servicio",
+      "otherEntityRelationshipName": "impactoPropagado",
+      "relationshipName": "servicioAfectado",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "descripcion",
+      "otherEntityName": "dependenciaDeServicio",
+      "otherEntityRelationshipName": "impactoPropagado",
+      "relationshipName": "dependencia",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

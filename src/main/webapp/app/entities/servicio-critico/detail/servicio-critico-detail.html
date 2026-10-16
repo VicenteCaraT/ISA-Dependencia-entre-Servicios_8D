@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (servicioCritico(); as servicioCriticoRef) {
+      <div>
+        <h2 data-cy="servicioCriticoDetailsHeading"><span jhiTranslate="oncallApp.servicioCritico.detail.title">Servicio Critico</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ servicioCriticoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicioCritico.prioridadEscalamiento">Prioridad Escalamiento</span></dt>
+          <dd>
+            <span>{{ servicioCriticoRef.prioridadEscalamiento }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicioCritico.requiereEscalamientoInmediato">Requiere Escalamiento Inmediato</span></dt>
+          <dd>
+            <span>{{ servicioCriticoRef.requiereEscalamientoInmediato }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicioCritico.justificacion">Justificacion</span></dt>
+          <dd>
+            <span>{{ servicioCriticoRef.justificacion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicioCritico.servicio">Servicio</span></dt>
+          <dd>
+            @if (servicioCritico()!.servicio) {
+              <div>
+                <a [routerLink]="['/servicio', servicioCritico()!.servicio?.id, 'view']">{{ servicioCriticoRef.servicio?.nombre }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/servicio-critico', servicioCriticoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

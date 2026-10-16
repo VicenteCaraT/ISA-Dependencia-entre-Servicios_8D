@@ -1,0 +1,29 @@
+{
+  "oncallApp": {
+    "dependenciaDeServicio": {
+      "home": {
+        "title": "Dependencia De Servicios",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Dependencia De Servicio",
+        "createOrEditLabel": "Crear o editar Dependencia De Servicio",
+        "notFound": "Ningún Dependencia De Servicios encontrado"
+      },
+      "created": "Un nuevo Dependencia De Servicio ha sido creado con el identificador {{ param }}",
+      "updated": "Un Dependencia De Servicio ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Dependencia De Servicio ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Dependencia De Servicio {{ id }}?"
+      },
+      "detail": {
+        "title": "Dependencia De Servicio"
+      },
+      "id": "ID",
+      "tipo": "Tipo",
+      "activa": "Activa",
+      "descripcion": "Descripcion",
+      "servicioDependiente": "Servicio Dependiente",
+      "servicioProveedor": "Servicio Proveedor",
+      "impactoPropagado": "Impacto Propagado"
+    }
+  }
+}

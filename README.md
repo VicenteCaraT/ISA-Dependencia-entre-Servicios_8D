@@ -43,7 +43,7 @@ Al terminar, verificá adentro del contenedor:
 
 ```bash
 java -version      # 21
-node --version     # 22
+node --version     # 24
 jhipster --version # 9.2.0
 docker ps          # sin errores
 ```
@@ -74,23 +74,40 @@ git status --porcelain | wc -l
 
 ### 3. Levantar la base de datos
 
+Desde una terminal **dentro del Dev Container**:
+
 ```bash
 docker compose -f src/main/docker/postgresql.yml up -d
+docker compose -f src/main/docker/postgresql.yml ps
 ```
+
+Esperá a que el estado sea `healthy`. La base de datos de OnCall usa el puerto
+`5434`, por lo que puede convivir con un PostgreSQL local que use el puerto
+habitual `5432`.
 
 ### 4. Levantar la aplicación
 
-Dos terminales:
+Abrí dos terminales **dentro del Dev Container**. En la primera:
 
 ```bash
 ./mvnw          # backend, puerto 8080
 ```
 
+Esperá el mensaje `Application 'oncall' is running!`. En la segunda:
+
 ```bash
-npm start       # frontend, puerto 9000
+npm start       # frontend, puerto 4200
 ```
 
-Entrás en `http://localhost:9000` con `admin` / `admin`.
+Entrá a `http://localhost:4200` con `admin` / `admin`.
+
+Si solamente levantaste el backend, podés acceder a `http://localhost:8080`.
+
+Para detener la base cuando termines, sin borrar sus datos:
+
+```bash
+docker compose -f src/main/docker/postgresql.yml down
+```
 
 ---
 
@@ -191,7 +208,7 @@ Si aparecen cientos de archivos, la aplicación generada quedó sin ignorar. El 
 ```
 isa-oncall-monolithic/
 ├── .devcontainer/
-│   └── devcontainer.json    # Java 21 + Node 22 + Docker + JHipster 9.2
+│   └── devcontainer.json    # Java 21 + Node 24 + Docker + JHipster 9.2
 ├── docs/
 │   └── modelo.md            # el modelo explicado en prosa
 ├── oncall.jh                # el modelo JDL
@@ -208,8 +225,8 @@ isa-oncall-monolithic/
 | Spring Boot | 4.0.x                      |
 | Java        | 21 (LTS)                   |
 | Angular     | 20.x                       |
-| Node        | 22 (LTS)                   |
-| PostgreSQL  | 17                         |
+| Node        | 24                         |
+| PostgreSQL  | 18                         |
 | Tests       | JUnit 5 · Vitest · Cypress |
 
 ---
